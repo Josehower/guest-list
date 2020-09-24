@@ -10,9 +10,14 @@ const Form = styled.form`
   ) => (props.isNonAssistFilterOn && props.isAssistent ? 'display: none;' : '')}
 `;
 
+const EditButton = styled.button`
+  ${(props) => (props.onScreen ? 'display: none;' : '')}
+`;
+
 const List = (props) => {
   const [isAssistFilterOn, setIsAssistFilterOn] = useState(false);
   const [isNonAssistFilterOn, setIsNonAssistFilterOn] = useState(false);
+  const [indexOnEditMode, setIndexOnEditMode] = useState('');
 
   function removeGuest(e, index) {
     e.preventDefault();
@@ -23,8 +28,36 @@ const List = (props) => {
     props.setGestList([...stateBackup]);
   }
 
-  function editGuest() {
-    console.log('allow Edit');
+  function editGuest(e, index) {
+    setIndexOnEditMode(index);
+  }
+
+  function doneEditGuest(e) {
+    e.preventDefault();
+    setIndexOnEditMode('');
+  }
+
+  function editFirstNameValueOnIndex(e, index) {
+    e.preventDefault();
+    let stateBackup = props.guestList;
+    stateBackup[index] = [
+      e.currentTarget.value,
+      stateBackup[index][1],
+      stateBackup[index][2],
+      stateBackup[index][3],
+    ];
+    props.setGestList([...stateBackup]);
+  }
+  function editLastNameValueOnIndex(e, index) {
+    e.preventDefault();
+    let stateBackup = props.guestList;
+    stateBackup[index] = [
+      stateBackup[index][0],
+      e.currentTarget.value,
+      stateBackup[index][2],
+      stateBackup[index][3],
+    ];
+    props.setGestList([...stateBackup]);
   }
 
   function checkGuestCheckbox(index) {
@@ -38,31 +71,30 @@ const List = (props) => {
   }
 
   function filterAssist() {
-    console.log('assistant filtered');
     setIsAssistFilterOn(true);
     setIsNonAssistFilterOn(false);
   }
 
   function filterNonAssist() {
-    console.log('nonAssistant filtered');
     setIsNonAssistFilterOn(true);
     setIsAssistFilterOn(false);
   }
   function removeFilters() {
-    console.log('see All again');
     setIsNonAssistFilterOn(false);
     setIsAssistFilterOn(false);
   }
-  //   .filter((assistant) => assistant[2])
-  //   .filter((assistant) => !assistant[2])
   return (
     <>
+      <button onClick={removeAll}>Remove all</button>
+      <button onClick={filterAssist}>Assistant</button>
+      <button onClick={filterNonAssist}>Non Assistant</button>
+      <button onClick={removeFilters}>All</button>
       {props.guestList.map((assistant, index) => (
         <Form
           isAssistent={assistant[2]}
           isAssistFilterOn={isAssistFilterOn}
           isNonAssistFilterOn={isNonAssistFilterOn}
-          key={assistant[1] + index}
+          key={assistant[3]}
           onSubmit={(e) => e.preventDefault()}
         >
           <input
@@ -70,16 +102,34 @@ const List = (props) => {
             checked={assistant[2]}
             onChange={(e) => checkGuestCheckbox(index)}
           />
-          <input type="text" readOnly value={assistant[0]} />
-          <input type="text" readOnly value={assistant[1]} />
-          <button onClick={(e) => editGuest(e, index)}>edit</button>
+          <input
+            type="text"
+            readOnly={indexOnEditMode !== index}
+            onChange={(e) => editFirstNameValueOnIndex(e, index)}
+            value={assistant[0]}
+          />
+          <input
+            type="text"
+            readOnly={indexOnEditMode !== index}
+            onChange={(e) => editLastNameValueOnIndex(e, index)}
+            value={assistant[1]}
+          />
+          <EditButton
+            onScreen={indexOnEditMode === index ? true : false}
+            onClick={(e) => editGuest(e, index)}
+          >
+            edit
+          </EditButton>
+          <EditButton
+            onScreen={indexOnEditMode !== index ? true : false}
+            type="submit"
+            onClick={(e) => doneEditGuest(e, index)}
+          >
+            done
+          </EditButton>
           <button onClick={(e) => removeGuest(e, index)}>X</button>
         </Form>
       ))}
-      <button onClick={removeAll}>Remove all</button>
-      <button onClick={filterAssist}>Assistant</button>
-      <button onClick={filterNonAssist}>Non Assistant</button>
-      <button onClick={removeFilters}>All</button>
     </>
   );
 };

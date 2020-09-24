@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import List from './List';
 function App() {
   const [guestList, setGuestList] = useState([
-    ['mariana', 'leiva', true],
-    ['jose', 'ordoniez', false],
-    ['marcela', 'yepes', false],
+    ['mariana', 'leiva', true, Math.random()],
+    ['jose', 'ordoniez', false, Math.random()],
+    ['marcela', 'yepes', false, Math.random()],
   ]);
   const [newGuestFirstName, setNewGuestFirstName] = useState('');
   const [newGuestLastName, setNewGuestLastName] = useState('');
@@ -20,7 +20,7 @@ function App() {
 
     const stateBackup = guestList;
     setGuestList([
-      [newGuestFirstName, newGuestLastName, false],
+      [newGuestFirstName, newGuestLastName, false, Math.random() + new Date()],
       ...stateBackup,
     ]);
   }
