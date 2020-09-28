@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import List from './List';
+import styled from 'styled-components';
+
+const Form = styled.form`
+  width: 80vw;
+  display: grid;
+  gap: 15px;
+  grid-template-columns: 40px 24vw 24vw 1fr;
+  margin-bottom: 5px;
+`;
+
 function App() {
   const [guestList, setGuestList] = useState([]);
   const [newGuestFirstName, setNewGuestFirstName] = useState('');
@@ -66,8 +76,8 @@ function App() {
   return (
     <>
       <h1>Guest List</h1>
-      <form onSubmit={addGuest}>
-        <button>Add</button>
+      <Form onSubmit={addGuest}>
+        <button>+</button>
         <input
           value={newGuestFirstName}
           onChange={(e) => setNewGuestFirstName(e.target.value)}
@@ -86,7 +96,7 @@ function App() {
           name="deadLine"
           value={actualDateInput}
         />
-      </form>
+      </Form>
       <List
         guestList={guestList}
         mirrorState={mirrorState}

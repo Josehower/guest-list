@@ -1,20 +1,65 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { colors } from './globalStyle.js';
 
 const Form = styled.form`
   width: 50vw;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 3px;
   div {
     display: inline;
     color: black;
   }
+  background: ${(props) =>
+    props.index % 2 === 0 ? `${colors.white}` : `${colors.grey}`};
+
+  width: 80vw;
+  grid-column: span 7;
+  display: grid;
+  gap: 15px;
+  grid-template-columns: 40px 24vw 24vw 1fr 5vw 40px;
+  align-items: center;
+  ${(props) =>
+    props.editOn
+      ? 'grid-template-columns: 40px 24vw 24vw 1fr 5vw 5vw 40px;'
+      : ''}
+
   ${(props) =>
     props.isAttendent
-      ? 'background: #90ee90; div {display: none;}'
-      : 'background: #FFA6A6;'}
+      ? `background: ${colors.green}; border: 1px solid #c8e0cc; div {visibility: hidden;}`
+      : ''}
   ${(props) =>
     props.isAttendFilterOn && !props.isAttendent ? 'display: none;' : ''}
   ${(props) =>
     props.isNonAttendFilterOn && props.isAttendent ? 'display: none;' : ''}
+`;
+
+const Wrapper = styled.div`
+  display: grid;
+  width: 80vw;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: space-between;
+`;
+
+const ButtonLarge = styled.button`
+  margin-bottom: 10px;
+`;
+
+const TextInput = styled.input`
+  background: ${colors.white}aa;
+  border-radius: 5px;
+  padding: 0 10px;
+  border: none;
+  border-bottom: 1px dotted #444;
+  ${(props) =>
+    props.readOnly
+      ? 'pointer-events: none;'
+      : `background-color: ${colors.white}aa; border: solid 1px #444;`}
+  &:hover {
+    background-color: ${colors.white};
+    transform: scale(1.02);
+  }
 `;
 
 const EditButton = styled.button`
@@ -139,9 +184,9 @@ const List = (props) => {
     return ``;
   }
   return (
-    <>
-      <button onClick={removeAll}>Remove all</button>
-      <button
+    <Wrapper>
+      <ButtonLarge onClick={removeAll}>Remove all</ButtonLarge>
+      <ButtonLarge
         onFocus={(e) => {
           if (props.indexOnEditMode !== '') {
             cancelEdit(e);
@@ -150,8 +195,8 @@ const List = (props) => {
         onClick={filterAttend}
       >
         Attending
-      </button>
-      <button
+      </ButtonLarge>
+      <ButtonLarge
         onFocus={(e) => {
           if (props.indexOnEditMode !== '') {
             cancelEdit(e);
@@ -160,10 +205,12 @@ const List = (props) => {
         onClick={filterNonAttend}
       >
         Non Attending
-      </button>
-      <button onClick={removeFilters}>All</button>
+      </ButtonLarge>
+      <ButtonLarge onClick={removeFilters}>All</ButtonLarge>
       {props.guestList.map((guest, index) => (
         <Form
+          index={index}
+          editOn={props.indexOnEditMode === index}
           isAttendent={guest.attending}
           isAttendFilterOn={isAttendFilterOn}
           isNonAttendFilterOn={isNonAttendFilterOn}
@@ -180,18 +227,23 @@ const List = (props) => {
               }
             }}
           />
-          <input
+          <TextInput
             type="text"
             readOnly={props.indexOnEditMode !== index}
             onChange={(e) => editFirstNameValueOnIndex(e, index)}
             value={guest.firstName}
           />
-          <input
+          <TextInput
             type="text"
             readOnly={props.indexOnEditMode !== index}
             onChange={(e) => editLastNameValueOnIndex(e, index)}
             value={guest.lastName}
           />
+          <div>
+            {datePrinter(
+              props.dateIdRef.filter((ref) => ref.id === guest.id)[0]?.date,
+            )}
+          </div>
 
           <EditButton
             onScreen={props.indexOnEditMode === index ? true : false}
@@ -214,14 +266,9 @@ const List = (props) => {
             cancel
           </EditButton>
           <button onClick={(e) => removeGuest(e, guest)}>X</button>
-          <div>
-            {datePrinter(
-              props.dateIdRef.filter((ref) => ref.id === guest.id)[0]?.date,
-            )}
-          </div>
         </Form>
       ))}
-    </>
+    </Wrapper>
   );
 };
 
