@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
 import { colors } from './globalStyle.js';
 
 const Form = styled.form`
