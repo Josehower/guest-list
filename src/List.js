@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { colors } from './globalStyle.js';
+import styled from 'styled-components';
 
 const Form = styled.form`
   width: 50vw;
