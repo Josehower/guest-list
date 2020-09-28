@@ -77,20 +77,23 @@ function App() {
     <>
       <h1>Guest List</h1>
       <Form onSubmit={addGuest}>
-        <button>+</button>
+        <button tabIndex="4">+</button>
         <input
+          tabIndex="1"
           value={newGuestFirstName}
           onChange={(e) => setNewGuestFirstName(e.target.value)}
           type="text"
           placeholder="First Name"
         />
         <input
+          tabIndex="2"
           value={newGuestLastName}
           onChange={(e) => setNewGuestLastName(e.target.value)}
           type="text"
           placeholder="Last Name"
         />
         <input
+          tabIndex="3"
           onChange={(e) => setActualDateInput(e.currentTarget.value)}
           type="datetime-local"
           name="deadLine"

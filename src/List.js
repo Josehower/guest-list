@@ -226,18 +226,40 @@ const List = (props) => {
                 cancelEdit(e);
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                checkGuestCheckbox(guest);
+                cancelEdit(e);
+              }
+            }}
           />
           <TextInput
             type="text"
             readOnly={props.indexOnEditMode !== index}
             onChange={(e) => editFirstNameValueOnIndex(e, index)}
             value={guest.firstName}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                doneEditGuest(e, guest);
+              }
+              if (e.key === 'Escape') {
+                cancelEdit(e);
+              }
+            }}
           />
           <TextInput
             type="text"
             readOnly={props.indexOnEditMode !== index}
             onChange={(e) => editLastNameValueOnIndex(e, index)}
             value={guest.lastName}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                doneEditGuest(e, guest);
+              }
+              if (e.key === 'Escape') {
+                cancelEdit(e);
+              }
+            }}
           />
           <div>
             {datePrinter(

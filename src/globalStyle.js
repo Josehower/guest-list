@@ -48,17 +48,35 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
     background-color:${colors.blue};
     border-radius: 5px;
-    border: transparent 3px solid;
+    border: transparent 2px solid;
     margin: 3px;
     text-shadow: 1px 1px black;
     color: ${colors.white};
+    transition: all .2s;
+
+    &:hover{
+      border: #3c73ab 2px solid;
+    }
+
+    &:focus{
+      border: #3c73ab 2px solid;
+      outline: none;
+    }
+  }
+ 
+  input{
+    border-radius: 5px;
+    border: 1px ${colors.grey} solid;
+    &:focus{
+      border: #3c73ab 2px solid;
+     outline: none;
+    }
   }
   input[type="checkbox"]{
     cursor: pointer;
-  }
-  input{
-    border-radius: 5px;
-    border: 1px ${colors.grey} solid;;
+    &:focus{
+      outline: double #3c73ab; 
+    }
   }
 
 `;
