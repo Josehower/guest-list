@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import List from './List';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import List from './List';
 
 const Form = styled.form`
   width: 80vw;
