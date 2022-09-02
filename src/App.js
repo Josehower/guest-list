@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import List from './List';
+import List, { api_endpoint } from './List';
 
 const Form = styled.form`
   width: 80vw;
@@ -28,7 +28,7 @@ function App() {
       return;
     }
     async function postGuest() {
-      const response = await fetch(`https://jh-guest-list.herokuapp.com/`, {
+      const response = await fetch(api_endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,9 +53,7 @@ function App() {
 
   function mirrorState() {
     async function fetchData() {
-      const response = await (
-        await fetch('https://jh-guest-list.herokuapp.com/')
-      ).json();
+      const response = await (await fetch(api_endpoint)).json();
       setGuestList(response);
     }
     fetchData();

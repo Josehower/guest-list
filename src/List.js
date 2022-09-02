@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { colors } from './globalStyle.js';
 import styled from 'styled-components';
+import { colors } from './globalStyle.js';
 
 const Form = styled.form`
   width: 50vw;
@@ -66,16 +66,18 @@ const EditButton = styled.button`
   ${(props) => (props.onScreen ? 'display: none;' : '')}
 `;
 
+export const api_endpoint =
+  'https://24c945df-dc40-4300-a4dc-8199f0214bf4.id.repl.co/guests/';
+
 const List = (props) => {
   const [isAttendFilterOn, setIsAttendFilterOn] = useState(false);
   const [isNonAttendFilterOn, setIsNonAttendFilterOn] = useState(false);
 
   async function removeGuest(e, guest) {
     e.preventDefault();
-    const response = await fetch(
-      `https://jh-guest-list.herokuapp.com/${guest.id}`,
-      { method: 'DELETE' },
-    );
+    const response = await fetch(`${api_endpoint}${guest.id}`, {
+      method: 'DELETE',
+    });
     await response.json();
     const dateIdRefStorage = JSON.parse(localStorage.getItem('dateIdRef'));
     const newRef = dateIdRefStorage.filter(({ id }) => id !== guest.id);
@@ -93,19 +95,16 @@ const List = (props) => {
   async function doneEditGuest(e, guest) {
     e.preventDefault();
     props.setIndexOnEditMode('');
-    const response = await fetch(
-      `https://jh-guest-list.herokuapp.com/${guest.id}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: guest.firstName,
-          lastName: guest.lastName,
-        }),
+    const response = await fetch(`${api_endpoint}${guest.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        firstName: guest.firstName,
+        lastName: guest.lastName,
+      }),
+    });
     await response.json();
     props.mirrorState();
   }
@@ -130,23 +129,20 @@ const List = (props) => {
 
   async function checkGuestCheckbox(guest) {
     const attendingState = !guest.attending;
-    const response = await fetch(
-      `https://jh-guest-list.herokuapp.com/${guest.id}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ attending: attendingState }),
+    const response = await fetch(`${api_endpoint}${guest.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({ attending: attendingState }),
+    });
     await response.json();
     props.mirrorState();
   }
 
   async function removeAll() {
     const promiseArray = props.guestList.map((guest) =>
-      fetch(`https://jh-guest-list.herokuapp.com/${guest.id}`, {
+      fetch(`${api_endpoint}${guest.id}`, {
         method: 'DELETE',
       }),
     );
